@@ -1,47 +1,66 @@
+/* ==========================================================================
+   1. IMPORTS & DEPENDENCIES
+   ========================================================================== */
+
 @import url('https://fonts.googleapis.com/css2?family=Azeret+Mono:ital,wght@0,400;0,500;1,400;1,500&family=DM+Mono:ital,wght@0,400;0,500;1,400;1,500&display=swap')
 layer(base);
 
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
 
+/* ==========================================================================
+   2. THEME CONFIGURATION
+   ========================================================================== */
+
 @theme {
+    /* Font Configuration */
     --font-body: var(--theme-font-body, monospace);
-    --background-color-main: var(--theme-dark);
-    --background-color-inverse: var(--theme-on-dark);
-    --text-color-main: var(--theme-on-dark);
-    --text-color-inverse: var(--theme-dark);
+    
+    /* Color System */
+    --color-bg-primary: var(--theme-dark);
+    --color-bg-secondary: var(--theme-on-dark);
+    --color-text-primary: var(--theme-on-dark);
+    --color-text-secondary: var(--theme-dark);
+    
+    /* Layout & Spacing */
     --container-8xl: 96rem;
     --spacing-icon: 1em;
+    
+    /* Typography */
+    --font-weight-heading: var(--theme-heading-weight);
+    --text-transform-heading: var(--theme-heading-case);
 }
+
+/* ==========================================================================
+   3. BASE STYLES
+   ========================================================================== */
 
 @layer base {
     html {
         @apply antialiased font-body;
     }
+    
     body {
         @apply flex flex-col min-h-screen;
     }
+    
     body > div {
         @apply flex flex-col grow;
     }
 
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
+    /* Typography Base */
+    h1, h2, h3, h4, h5, h6 {
         @apply break-words;
         line-height: 1.15;
-        font-weight: var(--theme-heading-weight);
-        text-transform: var(--theme-heading-case);
+        font-weight: var(--font-weight-heading);
+        text-transform: var(--text-transform-heading);
     }
 
-    b,
-    strong {
+    b, strong {
         @apply font-medium;
     }
 
+    /* Form Elements */
     select {
         @apply bg-no-repeat appearance-none cursor-pointer;
         background-image:
@@ -54,108 +73,155 @@ layer(base);
             6px 6px,
             6px 6px;
     }
+    
     option {
         color: initial;
     }
+}
 
-    /* Color themes */
-    :where([data-theme='colors-b']) {
-        --background-color-main: var(--theme-light);
-        --background-color-inverse: var(--theme-on-light);
-        --text-color-main: var(--theme-on-light);
-        --text-color-inverse: var(--theme-light);
+/* ==========================================================================
+   4. THEME VARIANTS
+   ========================================================================== */
+
+@layer base {
+    /* Color Theme System */
+    [data-theme='colors-b'] {
+        --color-bg-primary: var(--theme-light);
+        --color-bg-secondary: var(--theme-on-light);
+        --color-text-primary: var(--theme-on-light);
+        --color-text-secondary: var(--theme-light);
     }
-    :where([data-theme='colors-c']) {
-        --background-color-main: var(--theme-primary);
-        --background-color-inverse: var(--theme-on-primary);
-        --text-color-main: var(--theme-on-primary);
-        --text-color-inverse: var(--theme-primary);
+    
+    [data-theme='colors-c'] {
+        --color-bg-primary: var(--theme-primary);
+        --color-bg-secondary: var(--theme-on-primary);
+        --color-text-primary: var(--theme-on-primary);
+        --color-text-secondary: var(--theme-primary);
     }
-    :where([data-theme='colors-d']) {
-        --background-color-main: var(--theme-secondary);
-        --background-color-inverse: var(--theme-on-secondary);
-        --text-color-main: var(--theme-on-secondary);
-        --text-color-inverse: var(--theme-secondary);
+    
+    [data-theme='colors-d'] {
+        --color-bg-primary: var(--theme-secondary);
+        --color-bg-secondary: var(--theme-on-secondary);
+        --color-text-primary: var(--theme-on-secondary);
+        --color-text-secondary: var(--theme-secondary);
     }
-    :where([data-theme='colors-e']) {
-        --background-color-main: var(--theme-complementary);
-        --background-color-inverse: var(--theme-on-complementary);
-        --text-color-main: var(--theme-on-complementary);
-        --text-color-inverse: var(--theme-complementary);
+    
+    [data-theme='colors-e'] {
+        --color-bg-primary: var(--theme-complementary);
+        --color-bg-secondary: var(--theme-on-complementary);
+        --color-text-primary: var(--theme-on-complementary);
+        --color-text-secondary: var(--theme-complementary);
     }
-    :where([data-theme^='colors-']):not([data-theme='colors-f']) {
-        @apply bg-main text-main;
+    
+    /* Apply theme colors to elements */
+    [data-theme^='colors-']:not([data-theme='colors-f']) {
+        @apply bg-primary text-primary;
     }
 
-    /* Fixing issues caused by data wrapper added via auto annotations */
+    /* Fix for data wrapper issues from auto annotations */
     form data:has([class*='sm:col-span-2']) {
         @apply sm:col-span-2;
     }
+    
     nav data:has([class*='sm:col-start-2']) {
         @apply sm:col-start-2;
     }
+    
     li data:has([class*='link-fill']) {
         @apply inline-flex;
     }
 }
 
-@layer utilities {
+/* ==========================================================================
+   5. COMPONENT STYLES
+   ========================================================================== */
+
+@layer components {
+    /* Prose Content Styling */
     .prose {
-        --tw-prose-body: var(--text-color-main);
-        --tw-prose-headings: var(--text-color-main);
-        --tw-prose-lead: var(--text-color-main);
-        --tw-prose-links: var(--text-color-main);
-        --tw-prose-bold: var(--text-color-main);
-        --tw-prose-counters: var(--text-color-main);
-        --tw-prose-bullets: var(--text-color-main);
-        --tw-prose-hr: var(--text-color-main);
-        --tw-prose-quotes: var(--text-color-main);
-        --tw-prose-quote-borders: var(--text-color-main);
-        --tw-prose-captions: var(--text-color-main);
-        --tw-prose-kbd: var(--text-color-main);
-        --tw-prose-kbd-shadows: from var(--text-color-main) r g b;
-        --tw-prose-code: var(--text-color-main);
-        --tw-prose-pre-code: var(--text-color-inverse);
-        --tw-prose-pre-bg: var(--background-color-inverse);
-        --tw-prose-th-borders: var(--text-color-main);
-        --tw-prose-td-borders: var(--text-color-main);
+        --tw-prose-body: var(--color-text-primary);
+        --tw-prose-headings: var(--color-text-primary);
+        --tw-prose-lead: var(--color-text-primary);
+        --tw-prose-links: var(--color-text-primary);
+        --tw-prose-bold: var(--color-text-primary);
+        --tw-prose-counters: var(--color-text-primary);
+        --tw-prose-bullets: var(--color-text-primary);
+        --tw-prose-hr: var(--color-text-primary);
+        --tw-prose-quotes: var(--color-text-primary);
+        --tw-prose-quote-borders: var(--color-text-primary);
+        --tw-prose-captions: var(--color-text-primary);
+        --tw-prose-kbd: var(--color-text-primary);
+        --tw-prose-kbd-shadows: from var(--color-text-primary) r g b;
+        --tw-prose-code: var(--color-text-primary);
+        --tw-prose-pre-code: var(--color-text-secondary);
+        --tw-prose-pre-bg: var(--color-bg-secondary);
+        --tw-prose-th-borders: var(--color-text-primary);
+        --tw-prose-td-borders: var(--color-text-primary);
 
         a {
-            @apply underline font-normal;
-        }
+            @apply underline font-normal transition-all;
 
-        a:hover {
-            @apply no-underline;
+            &:hover {
+                @apply no-underline;
+            }
         }
 
         :where(h1, h2, h3, h4, h5, h6) {
-            font-weight: var(--theme-heading-weight);
+            font-weight: var(--font-weight-heading);
             line-height: 1.15;
         }
 
-        blockquote p:first-of-type::before,
-        blockquote p:last-of-type::after {
-            content: none;
+        blockquote {
+            p:first-of-type::before,
+            p:last-of-type::after {
+                content: none;
+            }
         }
     }
 }
 
-@utility bottom-shadow-* {
-    box-shadow: 0 calc(--value(integer) * 1px) 0 0 currentColor;
-}
+/* ==========================================================================
+   6. UTILITY CLASSES
+   ========================================================================== */
 
-@utility link-fill {
-    @apply transition-all text-main;
-    background-image: linear-gradient(
-        to bottom,
-        var(--background-color-inverse) 0%,
-        var(--background-color-inverse) 100%
-    );
-    background-size: 100% 0%;
-    background-repeat: no-repeat;
+@layer utilities {
+    /* Shadow Utilities */
+    .bottom-shadow-1 { box-shadow: 0 1px 0 0 currentColor; }
+    .bottom-shadow-2 { box-shadow: 0 2px 0 0 currentColor; }
+    .bottom-shadow-3 { box-shadow: 0 3px 0 0 currentColor; }
+    .bottom-shadow-4 { box-shadow: 0 4px 0 0 currentColor; }
+    .bottom-shadow-5 { box-shadow: 0 5px 0 0 currentColor; }
+    
+    /* Link Fill Effect */
+    .link-fill {
+        @apply transition-all text-primary relative;
+        
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-bg-secondary);
+            z-index: -1;
+            transform: scaleY(0);
+            transform-origin: bottom;
+            transition: transform 0.3s ease;
+        }
 
-    &:hover {
-        @apply text-inverse;
-        background-size: 100% 100%;
+        &:hover {
+            @apply text-secondary;
+            
+            &::after {
+                transform: scaleY(1);
+            }
+        }
     }
+    
+    /* Theme Color Utilities */
+    .bg-primary { background-color: var(--color-bg-primary); }
+    .bg-secondary { background-color: var(--color-bg-secondary); }
+    .text-primary { color: var(--color-text-primary); }
+    .text-secondary { color: var(--color-text-secondary); }
 }
